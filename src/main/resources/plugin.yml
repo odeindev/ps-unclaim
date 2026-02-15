@@ -1,4 +1,33 @@
 name: AutoUnclaim
-version: '1.0-SNAPSHOT'
+version: '1.0.0'
 main: org.odeindev.autounclaim.AutoUnclaim
-api-version: '1.18'
+api-version: 1.18
+author: odeindev
+description: Автоматическое удаление регионов ProtectionStones неактивных игроков
+
+# Зависимости от других плагинов
+depend:
+  - WorldGuard
+  - ProtectionStones
+
+# Команды плагина
+commands:
+  autounclaim:
+    description: Управление Auto Unclaim
+    usage: |
+      /autounclaim - Справка
+      /autounclaim run - Запустить проверку неактивных игроков
+      /autounclaim reload - Перезагрузить конфигурацию
+    permission: autounclaim.use
+    aliases: [auc, unclaim]
+
+# Права доступа
+permissions:
+  autounclaim.use:
+    description: Доступ к командам плагина
+    default: op
+  autounclaim.admin:
+    description: Полный доступ к плагину
+    default: op
+    children:
+      autounclaim.use: true

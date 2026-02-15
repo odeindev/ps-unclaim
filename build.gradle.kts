@@ -1,47 +1,57 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    kotlin("jvm") version "2.3.20-Beta2"
-    id("com.gradleup.shadow") version "8.3.0"
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    kotlin("jvm") version "1.8.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "org.odeindev"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/") {
-        name = "papermc-repo"
-    }
+    maven("https://repo.papermc.io/repository/maven-public/") // Paper API
+    maven("https://maven.enginehub.org/repo/") // WorldGuard
 }
 
 dependencies {
+    // Kotlin stdlib
+    implementation(kotlin("stdlib"))
+
+    // Paper API (Purpur совместим с Paper)
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+    // WorldGuard API
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.7")
+
+    // ProtectionStones API (если есть maven репозиторий, замени на правильный)
+    // compileOnly("...") // Добавь если нужно
 }
 
 tasks {
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18")
+    // Настройка компиляции Kotlin
+    compileKotlin {
+        kotlinOptions.jvmTarget = "17"
+    }
+
+    // Настройка ShadowJar для вшивания Kotlin stdlib
+    named<ShadowJar>("shadowJar") {
+        archiveClassifier.set("")
+
+        // Relocate Kotlin чтобы избежать конфликтов с другими плагинами
+        relocate("kotlin", "org.odeindev.autounclaim.libs.kotlin")
+
+        // Минимизация jar файла
+        minimize()
+    }
+
+    // Делаем shadowJar главной задачей сборки
+    build {
+        dependsOn(shadowJar)
     }
 }
 
-val targetJavaVersion = 17
-kotlin {
-    jvmToolchain(targetJavaVersion)
-}
-
-tasks.build {
-    dependsOn("shadowJar")
-}
-
-tasks.processResources {
-    val props = mapOf("version" to version)
-    inputs.properties(props)
-    filteringCharset = "UTF-8"
-    filesMatching("plugin.yml") {
-        expand(props)
-    }
+// Java версия
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }

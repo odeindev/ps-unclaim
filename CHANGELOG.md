@@ -143,4 +143,4 @@
 
 ## Информация
 
-**Поддержка:** odeindev**Лицензия:** MIT**Репозиторий:** [GitHub](https://github.com)
+**Поддержка:** odeindev**Лицензия:** MIT**Репозиторий:** [GitHub](https://github.com/ps-unclaim)

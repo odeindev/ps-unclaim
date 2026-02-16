@@ -148,7 +148,7 @@ class AutoUnclaim : JavaPlugin() {
                         logger.info("[AutoUnclaim]   - $world: $count region(s)")
                     }
                 } else {
-                    logger.info("[AutoUnclaim] Auto-run completed: no inactive players found")
+                    logger.info("[AutoUnclaim] Auto-run completed: no regions to remove")
                 }
             },
             intervalTicks,

@@ -43,8 +43,8 @@ class UnclaimCommand(private val plugin: AutoUnclaim) : CommandExecutor {
         val isDryRun = args.any { it.equals("--dry", ignoreCase = true) || it.equals("-d", ignoreCase = true) }
         val mode = if (isDryRun) ExecutionMode.DRY_RUN else ExecutionMode.REAL
 
-        val modeText = if (mode.isDryRun()) "§e[DRY-RUN MODE]" else ""
-        sender.sendMessage("§e[AutoUnclaim] $modeText Starting inactive player check...")
+        val modeText = if (mode.isDryRun()) " §e[DRY-RUN MODE]" else ""
+        sender.sendMessage("§e[AutoUnclaim]$modeText Starting inactive player check...")
 
         // Запускаем асинхронно, чтобы не блокировать главный поток
         plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {

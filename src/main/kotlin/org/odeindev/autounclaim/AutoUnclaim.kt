@@ -122,6 +122,7 @@ class AutoUnclaim : JavaPlugin() {
 
     /**
      * Запуск автоматических проверок по расписанию
+     * Всегда использует REAL режим (не dry-run)
      */
     private fun startAutoRun() {
         // Конвертируем минуты в тики (1 минута = 1200 тиков, 1 тик = 50ms)
@@ -132,13 +133,22 @@ class AutoUnclaim : JavaPlugin() {
             Runnable {
                 logger.info("[AutoUnclaim] Auto-run: Starting inactive player check...")
                 val pruner = RegionPruner(this)
-                val result = pruner.pruneInactiveRegions()
+                // Auto-run всегда использует REAL режим
+                val result = pruner.pruneInactiveRegions(ExecutionMode.REAL)
 
                 if (result.removedRegions > 0) {
                     logger.info(
                         "[AutoUnclaim] Auto-run completed: removed ${result.removedRegions} region(s), " +
                                 "affected ${result.affectedPlayers.size} player(s)"
                     )
+
+                    // Логируем статистику по мирам
+                    val regionsByWorld = result.getTotalRegionsByWorld()
+                    regionsByWorld.forEach { (world, count) ->
+                        logger.info("[AutoUnclaim]   - $world: $count region(s)")
+                    }
+                } else {
+                    logger.info("[AutoUnclaim] Auto-run completed: no inactive players found")
                 }
             },
             intervalTicks,

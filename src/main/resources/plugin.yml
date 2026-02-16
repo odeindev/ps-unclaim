@@ -1,5 +1,5 @@
 name: AutoUnclaim
-version: '1.0.0'
+version: '1.0.1'
 main: org.odeindev.autounclaim.AutoUnclaim
 api-version: 1.18
 author: odeindev
@@ -17,6 +17,7 @@ commands:
     usage: |
       /autounclaim - Справка
       /autounclaim run - Запустить проверку неактивных игроков
+      /autounclaim run --dry - Предпросмотр (dry-run, без удаления)
       /autounclaim reload - Перезагрузить конфигурацию
     permission: autounclaim.use
     aliases: [auc, unclaim]
